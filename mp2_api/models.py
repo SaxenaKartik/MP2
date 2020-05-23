@@ -23,7 +23,7 @@ class Drone(models.Model):
 class Client(models.Model):
     """Database model for clients """
     client_id = models.IntegerField()
-    login_time = models.DateTimeField(auto_now=True)
+    login_time = models.DateTimeField(auto_now_add=True)
     logout_time = models.DateTimeField(auto_now=True)
     ip_address = models.GenericIPAddressField()
     def __str__(self):
