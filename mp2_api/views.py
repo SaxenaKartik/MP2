@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
-
+from mp2_api import models
 from mp2_api import serializers
 
 # Create your views here.
@@ -109,3 +109,16 @@ class HelloViewSet(viewsets.ViewSet):
 #  - list specific client -> GET(client_id)
 #  - register a new client -> POST
 #  - delete a client -> DELETE (client_id)
+
+class DroneViewSet(viewsets.ModelViewSet):
+    """ Handle creating and updating drones"""
+
+    serializer_class = serializers.DroneSerializer
+    queryset = models.Drone.objects.all()
+
+
+class ClientViewSet(viewsets.ModelViewSet):
+    """ Handle creating and updating drones"""
+
+    serializer_class = serializers.ClientSerializer
+    queryset = models.Client.objects.all()

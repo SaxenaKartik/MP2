@@ -4,6 +4,8 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register('hello-viewset', views.HelloViewSet, base_name = 'hello-viewset')
+router.register('drone', views.DroneViewSet)
+router.register('client', views.ClientViewSet)
 
 urlpatterns = [
     path('hello-view/', views.HelloAPIView.as_view()),
