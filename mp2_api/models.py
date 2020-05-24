@@ -1,9 +1,10 @@
 from django.db import models
-
+# import hashlib
 # Create your models here.
 class Drone(models.Model):
     """Database model for drones """
-    drone_id = models.AutoField(primary_key = True)
+
+    drone_id = models.CharField(max_length = 100, primary_key = True)
     registered_date = models.DateField(auto_now_add=True)
     lat = models.DecimalField(max_digits=9, decimal_places=6)
     log = models.DecimalField(max_digits=9, decimal_places=6)
@@ -22,10 +23,12 @@ class Drone(models.Model):
 
 class Client(models.Model):
     """Database model for clients """
-    client_id = models.IntegerField()
+
+    client_id = models.CharField(max_length = 100, primary_key = True)
     login_time = models.DateTimeField(auto_now_add=True)
     logout_time = models.DateTimeField(auto_now=True)
     ip_address = models.GenericIPAddressField()
+    drone_id = models.ForeignKey(Drone, on_delete = models.CASCADE, default = 0)
     def __str__(self):
         return "Client Id : " + str(self.client_id) + "Login Time : " + str(self.login_time) + \
         "Logout Time : " + str(self.logout_time) + "IP Address : " + str(self.ip_address)

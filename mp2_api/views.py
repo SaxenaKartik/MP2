@@ -95,3 +95,17 @@ class HelloViewSet(viewsets.ViewSet):
     def destroy(self, request, pk = None):
         """ Handling deleting an object """
         return Response({'http_method' : 'DELETE'})
+
+# API needed for
+#  - list all registered drones -> GET
+#  - register new drone -> POST
+#  - view specific drone using the ID -> GET (id)
+#  - update the drone -> PATCH (registered_date, lat, log, battery_level, last_accessed, users_connected, status, warning_bit)
+#  - delete a registered drone -> DELETE (drone_id)
+
+# API needed for
+#  - list all connected clients -> GET
+#  - list clients connected to a specific drone -> GET(drone_id)
+#  - list specific client -> GET(client_id)
+#  - register a new client -> POST
+#  - delete a client -> DELETE (client_id)
