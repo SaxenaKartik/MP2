@@ -62,6 +62,50 @@ class Simulator:
 
 
 
+class Controller(self):
+    def __init__(self, simulator, observer, information):
+        self.simulator = Simulator(information)
+        self.observer = Observer()
+
+    def start(self, information):
+        state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
+        self.observer.update(state)
+        self.observer.update(information)
+        self.simulator.start(information)
+        state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
+        self.observer.update(state)
+
+    def fly(self, information):
+        state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
+        self.observer.update(state)
+        self.observer.update(information)
+        self.simulator.fly(information)
+        state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
+        self.observer.update(state)
+
+    def pause(self, information):
+        state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
+        self.observer.update(state)
+        self.observer.update(information)
+        self.simulator.pause(information)
+        state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
+        self.observer.update(state)
+
+    def resume(self, information):
+        state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
+        self.observer.update(state)
+        self.observer.update(information)
+        self.simulator.resume(information)
+        state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
+        self.observer.update(state)
+
+    def stop(self, information):
+        state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
+        self.observer.update(state)
+        self.observer.update(information)
+        self.simulator.stop(information)
+        state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
+        self.observer.update(state)
 
 class Observer:
     def update(self, log):
