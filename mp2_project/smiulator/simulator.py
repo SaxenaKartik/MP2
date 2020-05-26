@@ -59,3 +59,20 @@ class Simulator:
         self.information = information
 
         # make a post request based on information
+
+
+
+
+class Observer:
+    def update(self, log):
+        pass
+
+class LocalServerObserver(Observer):
+    def update(self, log):
+        print(log)
+
+class View:
+    def __init__(self):
+
+
+class LocalServerView(View):
