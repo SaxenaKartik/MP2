@@ -26,7 +26,7 @@ class Client(models.Model):
 
     client_id = models.CharField(max_length = 100, primary_key = True)
     login_time = models.DateTimeField(auto_now_add=True)
-    logout_time = models.DateTimeField(auto_now=True)
+    logout_time = models.DateTimeField(null = True)
     ip_address = models.GenericIPAddressField()
     drone_id = models.ForeignKey(Drone, on_delete = models.CASCADE, default = 0)
     def __str__(self):
