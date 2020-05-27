@@ -3,7 +3,10 @@
 import requests
 import hashlib
 
-
+def hashit(k : str):
+    hash = hashlib.sha1()
+    hash.update(k.encode('utf-8'))
+    return  hash.hexdigest()[:-10]
 
 
 class State:
