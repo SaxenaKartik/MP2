@@ -37,13 +37,19 @@ class DroneSerializer(serializers.ModelSerializer):
         #     warning_bit = validated_data['warning_bit']
         # )
         # drone.save()
-        validated_data['drone_id'] = hashit(validated_data.get('drone_id'))
+
+        validated_data['drone_id'] = validated_data.get('drone_id')
+
+        # validated_data['drone_id'] = hashit(validated_data.get('drone_id'))
+
         return super(DroneSerializer, self).create(validated_data)
 
     def update(self, instance, validated_data):
         """Handle updating drone"""
         if 'drone_id' in validated_data:
-            validated_data['drone_id'] = hashit(validated_data.get('drone_id'))
+            validated_data['drone_id'] = validated_data.get('drone_id')
+
+            # validated_data['drone_id'] = hashit(validated_data.get('drone_id'))
             # instance.drone_id = hashit(validated_data.get('drone_id', instance.drone_id))
         return super(DroneSerializer, self).update(instance, validated_data)
 
@@ -60,12 +66,17 @@ class ClientSerializer(serializers.ModelSerializer):
         }
     def create(self, validated_data):
         """Create and return a new client"""
-        validated_data['client_id'] = hashit(validated_data.get('client_id'))
+        validated_data['client_id'] = validated_data.get('client_id')
+
+
+        # validated_data['client_id'] = hashit(validated_data.get('client_id'))
         return super(ClientSerializer, self).create(validated_data)
 
     def update(self, instance, validated_data):
         """Handle updating client"""
         if 'client_id' in validated_data:
-            validated_data['client_id'] = hashit(validated_data.get('client_id'))
+            validated_data['client_id'] = validated_data.get('client_id')
+
+            # validated_data['client_id'] = hashit(validated_data.get('client_id'))
             # instance.client_id = make_password(validated_data.get('client_id', instance.client_id))
         return super(ClientSerializer, self).update(instance, validated_data)
