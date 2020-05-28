@@ -17,21 +17,25 @@ class State:
         self.name = "Initial"
 
 class Information:
-    def __init__(self, drone_id):
-        self.type = None
-        self.drone_id = drone_id
-        self.lat = None
-        self.log = None
-        self.battery_level = None
-        self.users_connected = None
+    def __init__(self, hash_drone_id, battery_level):
+        self.drone_id = hash_drone_id
+        self.battery_level = battery_level
+        self.command = None
+
 
 
 class Simulator:
-    def __init__(self, information):
+    def __init__(self, information, url):
         self.information = information
         self.state = State()
+        self.observer = LocalServerObserver()
 
         # make post request to initiate the drone
+        response = requests.post(url, data = {'drone_id' : information.drone_id, 'battery_level' : information.battery_level})
+        if response.status_code==201:
+            self.observer.update("Added new drone to database")
+        else:
+            self.observer.update("Could not add drone to database")
 
     def start(self, information):
         assert self.state.number == 0, "start() must be called after initial state"
@@ -40,8 +44,7 @@ class Simulator:
         self.information = information
 
         # make a post request based on information
-        if self.information.type!=None
-            pass
+
 
 
     def fly(self, information):
@@ -51,8 +54,7 @@ class Simulator:
         self.information = information
 
         # make a post request based on information
-        if self.information.type!=None
-            pass
+
 
     def pause(self, information):
         assert self.state.number == 1 or self.state.number == 2, "pause() must be called after WiFi setup state"
@@ -61,8 +63,7 @@ class Simulator:
         self.information = information
 
         # make a post request based on information
-        if self.information.type!=None
-            pass
+
 
     def resume(self, information):
         assert self.state.number==3, "resume() must be called after paused state"
@@ -71,8 +72,7 @@ class Simulator:
         self.information = information
 
         # make a post request based on information
-        if self.information.type!=None
-            pass
+
 
     def stop(self, information):
         assert self.state.number == 4, "stop() must be called after flying state"
@@ -81,13 +81,12 @@ class Simulator:
         self.information = information
 
         # make a post request based on information
-        if self.information.type!=None
-            pass
+
 
 
 class Controller:
-    def __init__(self, information):
-        self.simulator = Simulator(information)
+    def __init__(self, information, url):
+        self.simulator = Simulator(information, url)
         self.observer = Observer()
 
     def start(self, information):
@@ -140,28 +139,61 @@ class LocalServerObserver(Observer):
 
 class View:
     def __init__(self):
-        self.information = Information(drone_id)
-        self.controller = Controller(self.information)
+        pass
 
 class LocalServerView(View):
 
-    def __init__(self):
-        super().__init__()
-
-    def fetch_information(self, local_information):
-        # fetch information of the current state of simulator
-        # build information set based on current state and the valid drone information
-        drone_id = "00000000e215b4a2"
-        hash_drone_id = hashit(drone_id)
-        server_information = requests.get("http://127.0.0.1:8080/api/drone/" + str(hash_drone_id))
-        server_information_dict = json.loads(server_information.text)
-        server_information_code = server_information.status_code
-
-        if server_information_code==200:
-            type = "PATCH"
+    def __init__(self, hash_drone_id):
+        # check if drone is already present in the database
+        self.observer = LocalServerObserver()
+        self.information = Information(hash_drone_id, 100)
+        self.url = "http://192.168.1.101:8080/api/drone/"
+        connection = requests.get(self.url + str(hash_drone_id))
+        if connection.status_code!=200:
+            self.controller = Controller(self.information, self.url)
         else:
-            type = "POST"
+            self.observer.update("Drone already exists in database")
+
+    def fetch_information(self, hash_drone_id):
+        # open a file to get local information
+        # overwrite the server information based on local information
+        return self.information
 
 
     def send_information(self, information):
         # use the valid information set to update the simulator state and call valid function of the controller
+        if information.command == "start":
+            self.controller.start(information)
+
+        if information.command == "fly":
+            self.controller.fly(information)
+
+        if information.command == "pause":
+            self.controller.pause(information)
+
+        if information.command == "resume":
+            self.controller.resume(information)
+
+        if information.command == "stop":
+            self.controller.stop(information)
+
+
+class Machine:
+    def __init__(self):
+        self.drone_id = "00000000e215b4a2"
+        self.drone_id = hashit(self.drone_id)
+        print(self.drone_id)
+        self.view = LocalServerView(self.drone_id)
+        self.information = Information(self.drone_id, 100)
+
+    def fetch(self):
+        information_set = self.view.fetch_information(self.drone_id)
+        self.information = information_set
+
+    def send(self):
+        self.view.send_information(self.information)
+
+
+obj = Machine()
+# obj.fetch()
+# obj.send()
