@@ -25,7 +25,7 @@ SECRET_KEY = 'kwxm(o&d%say33l+*(#omt(bv_oncshd3f+utsnoa26q20pmal'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
