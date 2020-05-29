@@ -6,12 +6,12 @@ class Drone(models.Model):
 
     drone_id = models.CharField(max_length = 100, primary_key = True)
     registered_date = models.DateField(auto_now_add=True)
-    lat = models.DecimalField(max_digits=9, decimal_places=6)
-    log = models.DecimalField(max_digits=9, decimal_places=6)
+    lat = models.DecimalField(default = 0, max_digits=9, decimal_places=6)
+    log = models.DecimalField(default = 0, max_digits=9, decimal_places=6)
     battery_level = models.IntegerField()
     last_accessed = models.DateTimeField(auto_now=True)
-    users_connected = models.IntegerField()
-    status = models.IntegerField()
+    users_connected = models.IntegerField(default = 0)
+    status = models.IntegerField(default = 0)
     warning_bit = models.BooleanField(default = False)
     def __str__(self):
         return "Drone : " +str(self.drone_id) + "Registered Date : " + str(self.registered_date) + \
