@@ -1,4 +1,4 @@
 [
-{"drone_id" : "00000000e215b4a2", "lat" : 0, "log" : 0, "battery_level" : 100, "users_connected" : [0,[]], "state" : 0, "warning_bit" : 0, "command" : ""},
-{"drone_id" : "00000000e215b4a2", "lat" : 0, "log" : 0, "battery_level" : 100, "users_connected" : [1,["30:85:a9:25:37:80"]], "state" : 5, "warning_bit" : 0, "command" : ""}
+{"drone_id" : "00000000e215b4a2", "lat" : 0, "log" : 0, "battery_level" : 100, "users_connected" : [0, []], "state" : 0, "warning_bit" : 0, "command" : ""},
+{"drone_id" : "00000000e215b4a2", "lat" : 0, "log" : 0, "battery_level" : 100, "users_connected" : [1,[["30:85:a9:25:37:83", "192.168.1.101"], ["30:85:a9:25:37:82", "192.168.1.103"]]], "state" : 5, "warning_bit" : 0, "command" : ""}
 ]
