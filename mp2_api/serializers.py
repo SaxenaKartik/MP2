@@ -16,7 +16,7 @@ class DroneSerializer(serializers.ModelSerializer):
     """Serializes fields for Drone Model"""
     class Meta :
         model = models.Drone
-        fields = ('drone_id', 'registered_date', 'lat', 'log', 'battery_level', 'last_accessed', 'users_connected', 'status', 'warning_bit')
+        fields = ('drone_id', 'registered_date', 'lat', 'log', 'battery_level', 'last_accessed', 'users_connected', 'state', 'warning_bit')
         extra_kwargs = {
             'drone_id' :{
                 'style' : {'input_type' : 'password'}
