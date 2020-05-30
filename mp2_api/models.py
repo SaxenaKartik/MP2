@@ -11,7 +11,7 @@ class Drone(models.Model):
     battery_level = models.IntegerField()
     last_accessed = models.DateTimeField(auto_now=True)
     users_connected = models.IntegerField(default = 0)
-    status = models.IntegerField(default = 0)
+    state = models.IntegerField(default = 0)
     warning_bit = models.BooleanField(default = False)
     def __str__(self):
         return "Drone : " +str(self.drone_id) + "Registered Date : " + str(self.registered_date) + \
