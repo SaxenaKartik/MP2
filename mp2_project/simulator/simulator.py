@@ -65,6 +65,7 @@ class Simulator:
 
     def check_users_connected(self, infromation):
         pass
+        
     def start(self, information):
         assert self.state.number == 0, "start() must be called after initial state"
         self.state.number = 1
