@@ -48,13 +48,19 @@ class Simulator:
         }
         connection = requests.get(self.url + str(information.drone_id))
         if connection.status_code==200:
-            self.observer.update("Drone exists in db")
-        else:
-            response = requests.post(url, data = entry)
-            if response.status_code==201:
-                self.observer.update("Added new drone to database")
+            self.observer.update("Verdict : Drone exists in db")
+            patch = requests.patch(self.url + str(information.drone_id) + "/", data = {"state" : 0})
+            if patch.status_code==200:
+                self.observer.update("Verdict : Reset the drone state in db")
             else:
-                self.observer.update("Could not add drone to database")
+                self.observer.update("Verdict : Could not reset drone state in db")
+
+        else:
+            post = requests.post(url, data = entry)
+            if post.status_code==201:
+                self.observer.update("Verdict : Added new drone to database")
+            else:
+                self.observer.update("Verdict : Could not add drone to database")
 
     def start(self, information):
         assert self.state.number == 0, "start() must be called after initial state"
@@ -72,11 +78,11 @@ class Simulator:
             "state" : self.information.state,
             "warning_bit" : self.information.warning_bit,
         }
-        response = requests.post(self.url, data = entry)
-        if response.status_code==201:
-            self.observer.update("Updated drone in database to state 1")
+        response = requests.patch(self.url + str(self.information.drone_id) + "/", data = entry)
+        if response.status_code==200:
+            self.observer.update("Verdict : Updated drone in database to state 1")
         else:
-            self.observer.update("Could not update drone to database")
+            self.observer.update("Verdict : Could not update drone to database")
 
 
     def fly(self, information):
@@ -85,7 +91,22 @@ class Simulator:
         self.state.name = "Flying"
         self.information = information
 
+        entry = {
+            "drone_id" : self.information.drone_id,
+            "lat" : self.information.lat,
+            "log" : self.information.log,
+            "battery_level" : self.information.battery_level,
+            "users_connected" : self.information.users_connected,
+            "state" : self.information.state,
+            "warning_bit" : self.information.warning_bit,
+        }
         # make a post request based on information
+        response = requests.patch(self.url + str(self.information.drone_id) + "/", data = entry)
+        if response.status_code==200:
+            self.observer.update("Verdict : Updated drone in database to state 2")
+        else:
+            self.observer.update("Verdict : Could not update drone to database")
+
 
 
     def pause(self, information):
@@ -94,8 +115,21 @@ class Simulator:
         self.state.name = "Paused WiFi connections"
         self.information = information
 
+        entry = {
+            "drone_id" : self.information.drone_id,
+            "lat" : self.information.lat,
+            "log" : self.information.log,
+            "battery_level" : self.information.battery_level,
+            "users_connected" : self.information.users_connected,
+            "state" : self.information.state,
+            "warning_bit" : self.information.warning_bit,
+        }
         # make a post request based on information
-
+        response = requests.patch(self.url + str(self.information.drone_id) + "/", data = entry)
+        if response.status_code==200:
+            self.observer.update("Verdict : Updated drone in database to state 3")
+        else:
+            self.observer.update("Verdict : Could not update drone to database")
 
     def resume(self, information):
         assert self.state.number==3, "resume() must be called after paused state"
@@ -103,16 +137,44 @@ class Simulator:
         self.state.name = "Resumed WiFi connections"
         self.information = information
 
+        entry = {
+            "drone_id" : self.information.drone_id,
+            "lat" : self.information.lat,
+            "log" : self.information.log,
+            "battery_level" : self.information.battery_level,
+            "users_connected" : self.information.users_connected,
+            "state" : self.information.state,
+            "warning_bit" : self.information.warning_bit,
+        }
         # make a post request based on information
+        response = requests.patch(self.url + str(self.information.drone_id) + "/", data = entry)
+        if response.status_code==200:
+            self.observer.update("Verdict : Updated drone in database to state 4")
+        else:
+            self.observer.update("Verdict : Could not update drone to database")
 
 
     def stop(self, information):
-        assert self.state.number == 4, "stop() must be called after flying state"
+        assert self.state.number in [0,1,2,3,4], "stop() can be called after any state [0,1,2,3,4]"
         self.state.number = 5
         self.state.name = "Stopped Access Point"
         self.information = information
 
+        entry = {
+            "drone_id" : self.information.drone_id,
+            "lat" : self.information.lat,
+            "log" : self.information.log,
+            "battery_level" : self.information.battery_level,
+            "users_connected" : self.information.users_connected,
+            "state" : self.information.state,
+            "warning_bit" : self.information.warning_bit,
+        }
         # make a post request based on information
+        response = requests.patch(self.url + str(self.information.drone_id) + "/", data = entry)
+        if response.status_code==200:
+            self.observer.update("Verdict : Updated drone in database to state 5")
+        else:
+            self.observer.update("Verdict : Could not update drone to database")
 
 class Controller:
     def __init__(self, information, url):
@@ -121,43 +183,43 @@ class Controller:
 
     def start(self, information):
         state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
-        self.observer.update(state)
-        self.observer.update(information.command)
+        self.observer.update("State : " + str(state))
+        self.observer.update("Command : " + information.command)
         self.simulator.start(information)
         state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
-        self.observer.update(state)
+        self.observer.update("State : " + str(state))
 
     def fly(self, information):
         state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
-        self.observer.update(state)
-        self.observer.update(information)
+        self.observer.update("State : " + str(state))
+        self.observer.update("Command : " + information.command)
         self.simulator.fly(information)
         state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
-        self.observer.update(state)
+        self.observer.update("State : " + str(state))
 
     def pause(self, information):
         state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
-        self.observer.update(state)
-        self.observer.update(information)
+        self.observer.update("State : " + str(state))
+        self.observer.update("Command : " + information.command)
         self.simulator.pause(information)
         state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
-        self.observer.update(state)
+        self.observer.update("State : " + str(state))
 
     def resume(self, information):
         state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
-        self.observer.update(state)
-        self.observer.update(information)
+        self.observer.update("State : " + str(state))
+        self.observer.update("Command : " + information.command)
         self.simulator.resume(information)
         state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
-        self.observer.update(state)
+        self.observer.update("State : " + str(state))
 
     def stop(self, information):
         state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
-        self.observer.update(state)
-        self.observer.update(information)
+        self.observer.update("State : " + str(state))
+        self.observer.update("Command : " + information.command)
         self.simulator.stop(information)
         state = {"Number" : self.simulator.state.number, "Name" : self.simulator.state.name}
-        self.observer.update(state)
+        self.observer.update("State : " + str(state))
 
 class Observer:
     def update(self, log):
@@ -193,7 +255,7 @@ class LocalServerView(View):
         self.information = Information(data)
 
         # print(self.information.state, self.controller.simulator.state.number)
-
+        self.information.drone_id = hashit(self.information.drone_id)
         if self.information.state == 1 and self.controller.simulator.state.number == 0:
             # print("Here")
             self.information.command = "start"
@@ -201,15 +263,14 @@ class LocalServerView(View):
         elif self.information.state == 2 and self.controller.simulator.state.number == 1:
             self.information.command = "fly"
 
-        elif self.information.state == 3 and (self.controller.simulator.state.number == 1 or self.controller.simulator.state.number == 2):
+        elif self.information.state == 3 and self.controller.simulator.state.number in [1,2]:
             self.information.command = "pause"
 
         elif self.information.state == 4 and self.controller.simulator.state.number == 3:
             self.information.command = "resume"
 
-        elif self.information.state == 5 and self.controller.simulator.state.number == 4:
+        elif self.information.state == 5 and self.controller.simulator.state.number in [0,1,2,3,4]:
             self.information.command = "stop"
-            self.exit_code = 1
 
         else:
             self.information.command = ""
@@ -235,7 +296,11 @@ class LocalServerView(View):
             self.controller.stop(information)
 
         if information.command == "":
-            self.observer.update("No changes found! Maintaining the same state : " + str(self.controller.simulator.state.number))
+            # self.observer.update(" " + str(self.controller.simulator.state.number))
+            state = {"Number" : self.controller.simulator.state.number, "Name" : self.controller.simulator.state.name}
+            self.observer.update("Verdict : No new command")
+            self.observer.update("State : " +  str(state))
+
 
 class Machine:
     def __init__(self):
@@ -243,6 +308,7 @@ class Machine:
         entry = json.loads(data.read())[0]
         # print(entry)
         self.observer = LocalServerObserver()
+        self.exit_code = 0
         # validating the entry
 
         if "drone_id" not in entry or entry["drone_id"]=="":
@@ -273,11 +339,12 @@ class Machine:
         # print(information_set.command)
     def send(self):
         self.view.send_information(self.information)
+        # print(self.information.state)
+        if self.information.state==5:
+            self.exit_code = 1
 
 
 obj = Machine()
-# obj.fetch()
-# obj.send()
 
 while(True):
     obj.fetch()
@@ -286,3 +353,4 @@ while(True):
     time.sleep(5)
     if obj.exit_code==1:
         obj.observer.update("Stopping the server")
+        break
