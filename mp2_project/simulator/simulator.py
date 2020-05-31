@@ -23,11 +23,12 @@ class Information:
         self.lat = entry["lat"]
         self.log = entry["log"]
         self.battery_level = entry["battery_level"]
-        self.users_connected = entry["users_connected"]
+        self.users_connected = entry["users_connected"][0]
         self.state = entry["state"]
         self.warning_bit = True if entry["warning_bit"] else False
         self.command = entry["command"]
         self.state = entry["state"]
+        self.users_connected_list = entry["users_connected"][1]
 
 
 class Simulator:
@@ -62,6 +63,8 @@ class Simulator:
             else:
                 self.observer.update("Verdict : Could not add drone to database")
 
+    def check_users_connected(self, infromation):
+        pass
     def start(self, information):
         assert self.state.number == 0, "start() must be called after initial state"
         self.state.number = 1
