@@ -58,7 +58,9 @@ class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Client
         fields = (
-        'client_id', 'login_time', 'logout_time', 'ip_address', 'drone_id')
+        'client_id', 'login_time', 'logout_time', 'ip_address', 'drone'
+        # 'client_id', 'login_time', 'logout_time', 'ip_address'
+        )
         extra_kwargs = {
             'client_id' : {
                 'style' : {'input_type': 'password'}
