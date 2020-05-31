@@ -1,4 +1,4 @@
 [
 {"drone_id" : "00000000e215b4a2", "lat" : 0, "log" : 0, "battery_level" : 100, "users_connected" : 0, "state" : 0, "warning_bit" : 0, "command" : ""},
-{"drone_id" : "00000000e215b4a2", "lat" : 0, "log" : 0, "battery_level" : 100, "users_connected" : 0, "state" : 1, "warning_bit" : 0, "command" : ""}
+{"drone_id" : "00000000e215b4a2", "lat" : 0, "log" : 0, "battery_level" : 100, "users_connected" : 0, "state" : 5, "warning_bit" : 0, "command" : ""}
 ]
