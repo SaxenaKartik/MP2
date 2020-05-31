@@ -17,7 +17,7 @@ class Drone(models.Model):
         return "Drone : " +str(self.drone_id) + "Registered Date : " + str(self.registered_date) + \
         "GPS Location : " + str([self.lat, self.log]) + "Battery Level : " + str(self.battery_level) + \
         "Last Accessed : " + str(self.last_accessed) + "Users Connected : " + str(self.users_connected) + \
-        "Status : " + str(self.status) + "Warning : " + str(self.warning_bit)
+        "State : " + str(self.state) + "Warning : " + str(self.warning_bit)
     class Meta :
         verbose_name_plural = "Drones"
 
@@ -28,7 +28,7 @@ class Client(models.Model):
     login_time = models.DateTimeField(auto_now_add=True)
     logout_time = models.DateTimeField(null = True)
     ip_address = models.GenericIPAddressField()
-    drone_id = models.ForeignKey(Drone, on_delete = models.CASCADE, default = 0)
+    drone = models.ForeignKey(Drone, on_delete = models.CASCADE, default = 0)
     def __str__(self):
         return "Client Id : " + str(self.client_id) + "Login Time : " + str(self.login_time) + \
         "Logout Time : " + str(self.logout_time) + "IP Address : " + str(self.ip_address)
