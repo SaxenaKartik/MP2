@@ -93,7 +93,7 @@ class Simulator:
                     logout_time = datetime.now()
                     patch = requests.patch(self.client_url + str(client) + "/", data = {"logout_time" : logout_time})
                     if patch.status_code==200:
-                        self.observer.update("Verdict : Updated logout time of a drone in db -> " + str(client))
+                        self.observer.update("Verdict : Updated logout time of a client in db -> " + str(client))
                     else:
                         self.observer.update("Verdict : Could not update the logout time")
 
@@ -102,23 +102,23 @@ class Simulator:
                 # make POST request for the new user
                 post = requests.post(self.client_url, data = {"client_id" : user, "ip_address": new_connected_clients[user], "drone" : self.information.drone_id})
                 if post.status_code==201:
-                    self.observer.update("Verdict : Added a new drone to the database -> " + str(user))
+                    self.observer.update("Verdict : Added a new client to the database -> " + str(user))
                 else:
-                    self.observer.update("Verdict : Could not add a new drone to the database")
+                    self.observer.update("Verdict : Could not add a new client to the database")
 
             elif user in client_list_db and client_list_db[user]!=None:
                 # make a delete request for old entry and make a POST request for new entry
                 delete = requests.delete(self.client_url + str(user) + "/")
                 if delete.status_code==204:
-                    self.observer.update("Verdict : Deleted a drone from the database -> " + str(user))
+                    self.observer.update("Verdict : Deleted a client from the database -> " + str(user))
                 else:
-                    self.observer.update("Verdict : Could not delete the drone from database")
+                    self.observer.update("Verdict : Could not delete the client from database")
 
                 post = requests.post(self.client_url, data = {"client_id" : user, "ip_address": new_connected_clients[user], "drone" : self.information.drone_id})
                 if post.status_code==201:
-                    self.observer.update("Verdict : Added the drone back to the database -> "+ str(user))
+                    self.observer.update("Verdict : Added the client back to the database -> "+ str(user))
                 else:
-                    self.observer.update("Verdict : Could not add drone back to the database")
+                    self.observer.update("Verdict : Could not add client back to the database")
 
 
 
@@ -306,8 +306,8 @@ class LocalServerView(View):
         # check if drone is already present in the database
         self.observer = LocalServerObserver()
         self.information = information
-        self.url = "http://192.168.43.34:8080/api/drone/"
-        self.client_url = "http://192.168.43.34:8080/api/client/"
+        self.url = "http://192.168.1.101:8080/api/drone/"
+        self.client_url = "http://192.168.1.101:8080/api/client/"
         # connection = requests.get(self.url + str(information.drone_id))
         # if connection.status_code!=200:
         self.controller = Controller(self.information, self.url, self.client_url)
